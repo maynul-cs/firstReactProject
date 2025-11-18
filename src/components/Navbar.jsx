@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FaBars } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 
 
@@ -13,12 +14,12 @@ const Navbar = () => {
 
 
   return (
-    <nav className='bg-green-700 text-white py-4 md:py-8'>
+    <nav className='bg-green-700 text-white py-4 md:py-8 relative'>
         <div className='container mx-auto flex justify-between items-center'>
-            <h3> React Practice </h3>
+            <h3 className='text-xl font-bold'> React Practice </h3>
 
             {/* Mobile Menu Button */}
-            <div>
+            <div className='md:hidden'>
                 <button onClick={toggleMenu}>
                     {
                         isOpen ? <IoCloseSharp /> : <FaBars />
@@ -26,14 +27,28 @@ const Navbar = () => {
                 </button>
             </div>
 
-            <ul className='flex space-x-04 md:space-x-8'>
-                <li> Home </li>
-                <li> Products </li>
-                <li> Blogs </li>
-                <li> Contact </li>
-                <li> About </li>
+            <ul className='hidden md:flex space-x-04 md:space-x-8'>
+                <li> <Link to={'/'} className='hover:text-green-500'>Home</Link> </li>
+                <li> <Link to={'products'} className='hover:text-green-500'>Products</Link> </li>
+                <li> <Link to={'blogs'} className='hover:text-green-500'>Blogs</Link> </li>
+                <li> <Link to={'contact'} className='hover:text-green-500'>Contact</Link> </li>
+                <li> <Link to={'about'} className='hover:text-green-500'>About</Link> </li>
             </ul>
-            <button> Login </button>
+            <button className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Login </button>
+
+            {/* Mobile menu collapsed */}
+            <div className={`md:hidden w-full    absolute bg-green-600 top-full left-0 ${isOpen ? 'block' : 'hidden'}`}>
+                <ul className='flex flex-col items-center py-4 space-y-2'>
+                <li className='hover:text-green-500'> Home </li>
+                <li className='hover:text-green-500'> Products </li>
+                <li className='hover:text-green-500'> Blogs </li>
+                <li className='hover:text-green-500'> Contact </li>
+                <li> About </li>
+                <li>
+                    <button className='bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Login </button>    
+                </li>
+            </ul>
+            </div>
         </div>
     </nav>
   )
