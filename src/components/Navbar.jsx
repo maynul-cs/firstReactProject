@@ -14,7 +14,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className='bg-green-700 text-white py-4 md:py-8 relative'>
+    <nav className='bg-green-700 text-white py-4 md:py-8 sticky top-0 z-10'>
         <div className='container mx-auto flex justify-between items-center'>
             <h3 className='text-xl font-bold'> React Practice </h3>
 
