@@ -30,7 +30,7 @@ const Navbar = () => {
             <h3 className='text-xl font-bold'> React Practice </h3>
 
             {/* Mobile Menu Button */}
-            <div className='md:hidden'>
+            <div className='md:hidden ml-auto'>
                 <button onClick={toggleMenu}>
                     {
                         isOpen ? <IoCloseSharp /> : <FaBars />
