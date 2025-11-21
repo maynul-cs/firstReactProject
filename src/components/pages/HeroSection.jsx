@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeroSection = () => {
   return (
-    <div className='flex flex-col text-white text-center px-4 items-center justify-center h-[90vh]' style={{
+    <div className='flex flex-col text-white text-center px-4 items-center justify-center h-[100vh]' style={{
         backgroundImage: "url('/src/assets/hero-bg.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center'

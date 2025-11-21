@@ -25,7 +25,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className='bg-green-700 text-white py-4 md:py-8 sticky top-0 z-10'>
+    <nav className='bg-black/60 text-white py-4 md:py-8 fixed w-full top-0'>
         <div className='container mx-auto flex justify-between items-center'>
             <h3 className='text-xl font-bold'> React Practice </h3>
 
@@ -86,7 +86,7 @@ const Navbar = () => {
             </Link>
 
             {/* Mobile menu collapsed */}
-            <div className={`md:hidden w-full    absolute bg-green-600 top-full left-0 ${isOpen ? 'block' : 'hidden'}`}>
+            <div className={`md:hidden w-full    absolute bg-green-950 top-full left-0 ${isOpen ? 'block' : 'hidden'}`}>
                 <ul className='flex flex-col items-center py-4 space-y-2'>
                 <li className='hover:text-green-500'> Home </li>
                 <li className='hover:text-green-500'> Products </li>
