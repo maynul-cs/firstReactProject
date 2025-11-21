@@ -9,6 +9,8 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('/');
     const location = useLocation();
+    
+    
 
     useEffect(() => {
         setActiveLink(location.pathname || '/');

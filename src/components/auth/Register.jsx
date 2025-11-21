@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
@@ -6,11 +6,13 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/firebase.config';
+import { AuthContext } from '../../providers/AuthProvider';
 
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
+  const {createUserWithPass} = useContext(AuthContext);
 
   const handleRegisterForm = (e) => {
   e.preventDefault();
@@ -19,13 +21,13 @@ const Register = () => {
   const password = e.target.password.value;
   const confirmPass = e.target.confirmPass.value;
 
-  createUserWithEmailAndPassword(auth, email, password)
+  createUserWithPass(email, password)
     .then(result => {
-      const user = result.user;
-      console.log(user);
-    })
+      const user =result.user;
+      console.log("Registered User:", user);
+  })
     .catch(err => {
-      console.log(err);
+      console.error("Error", err);
     })
   }
       
