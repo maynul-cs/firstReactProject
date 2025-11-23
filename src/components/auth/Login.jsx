@@ -1,27 +1,51 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { FaGoogle } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
+import { AuthContext } from '../../providers/AuthProvider';
 
 const Login = () => {
+  const [showPass, setShowPass] = useState(false);
+  const { signInWithEmailPass } = useContext(AuthContext);
+
+  const handleLoginForm = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    signInWithEmailPass(email, password)
+      .then(result => {
+        const user = result.user;
+        console.log("Logged In User:", user);
+      })
+      .catch(err => {
+        console.error("Error", err);
+      })  
+  }
+
   return (
     <div className='flex items-center justify-center h-[100vh] px-4 pt-10 bg-green-900'>
-      <div className=' bg-white max-w-sm p-8'>
+      <div className=' bg-white w-100 p-8'>
         <h2 className='text-green-800 font-bold text-center text-2xl mb-6'> Login </h2>
-        <form className='space-y-4'>
+        <form onSubmit={handleLoginForm} className='space-y-4'>
            <input 
-           type="email" 
-           name=''
+           type="email"
+           name='email'
            placeholder='Enter a valid Email'
            className='w-full border focus:outline-none px-4 py-2 rounded focus:ring-2 focus:ring-green-500'
            id='' />
 
-           <input 
-           type="password" 
-           name=''
-           placeholder='Enter a Password'
-           className='w-full border focus:outline-none px-4 py-2 rounded focus:ring-2 focus:ring-green-500'
-           id='' />
+           <div className='relative flex items-center'>
+            <input 
+              type={showPass ? "text" : "password"} 
+              name='password'
+              placeholder='Enter a Password'
+              className='w-full border focus:outline-none px-4 py-2 rounded focus:ring-2 focus:ring-green-500'
+              id='' />
+
+              {
+                showPass ? <FaEyeSlash onClick={() => setShowPass(!showPass)} className='absolute right-3 cursor-pointer hover:text-green-600' /> : <FaEye onClick={() => setShowPass(!showPass)} className='absolute right-3 cursor-pointer hover:text-green-600' />
+              }
+           </div>
 
            <button type='submit'
            className='w-full mb-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer'>

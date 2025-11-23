@@ -4,8 +4,6 @@ import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase/firebase.config';
 import { AuthContext } from '../../providers/AuthProvider';
 
 
