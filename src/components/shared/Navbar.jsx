@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaBars } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProvider';
 
 
 
@@ -9,7 +10,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('/');
     const location = useLocation();
-    
+    const {user, handleSignOut} = useContext(AuthContext);
     
 
     useEffect(() => {
@@ -21,10 +22,12 @@ const Navbar = () => {
     }
 
     const handleLinkClick = (path) => {
-        setActiveLink(path);
-        
+        setActiveLink(path);    
     }
 
+    const handleSignOutUser = () => {
+        handleSignOut()
+    }
 
   return (
     <nav className='bg-black/60 text-white py-4 md:py-8 fixed w-full top-0'>
@@ -83,9 +86,19 @@ const Navbar = () => {
                 </li>
             </ul>
             
-            <Link to={'/login'}>
-                    <button className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Login </button>
-            </Link>
+            <div>
+                {
+                    user ? <div className='flex items-center gap-2'> 
+                        <span> {user?.email}</span> <button onClick={handleSignOutUser} className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Sign Out </button> 
+                        </div> 
+                        : 
+                        <div>
+                        <Link to={'/login'}>
+                            <button className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Login </button>
+                        </Link>
+                </div>
+                }
+            </div>
 
             {/* Mobile menu collapsed */}
             <div className={`md:hidden w-full    absolute bg-green-950 top-full left-0 ${isOpen ? 'block' : 'hidden'}`}>
