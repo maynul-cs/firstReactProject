@@ -5,15 +5,33 @@ import { FaGithub } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { AuthContext } from '../../providers/AuthProvider';
+import Swal from 'sweetalert2';
+import { GoogleAuthProvider } from 'firebase/auth';
+
 
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
-  const {createUserWithPass} = useContext(AuthContext);
+  const {createUserWithPass, signInWithGoogle} = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const navigate = useNavigate();
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const provider = new GoogleAuthProvider();
+
+  // Sign in with Google
+  const handleGoogleRegister = () => {
+    signInWithGoogle(provider)
+    .then(result => {
+      const user = result.user;
+      console.log(user);
+    })
+    .catch(err => {
+      console.error("Error", err);
+    })
+  } 
+
 
   const handleRegisterForm = (e) => {
   e.preventDefault();
@@ -26,14 +44,24 @@ const Register = () => {
     setErrorMsg("Password did not match");
     return;
   }
+  if (!passwordRegex.test(password)){
+    setErrorMsg("Password must be at least 8 characters long and contain at least one letter and one number.");
+    return;
+  }
   
   createUserWithPass(email, password)
     .then(result => {
       const user =result.user;
       console.log(user);
-      setErrorMsg('Registration Successful');
       setSuccessMsg('');
       e.target.reset();
+
+    Swal.fire({
+      title: "Good job!",
+      text: "Registration Successful",
+      icon: "success"
+    });
+
 
       setTimeout(() => {
         setSuccessMsg('');
@@ -135,7 +163,7 @@ const Register = () => {
         </div>
 
         <div className='flex flex-col space-y-3 mt-6'>
-          <button className='text-white bg-red-600 py-2 rounded hover:bg-red-700 cursor-pointer flex items-center justify-center gap-2'> 
+          <button onClick={handleGoogleRegister} className='text-white bg-red-600 py-2 rounded hover:bg-red-700 cursor-pointer flex items-center justify-center gap-2'> 
             Register with Google <FaGoogle />
           </button>
           <button className='text-white bg-gray-700 py-2 rounded hover:bg-gray-900 cursor-pointer flex items-center justify-center gap-2'>
