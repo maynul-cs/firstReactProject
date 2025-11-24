@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
@@ -11,6 +11,9 @@ const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
   const {createUserWithPass} = useContext(AuthContext);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const navigate = useNavigate();
 
   const handleRegisterForm = (e) => {
   e.preventDefault();
@@ -19,13 +22,28 @@ const Register = () => {
   const password = e.target.password.value;
   const confirmPass = e.target.confirmPass.value;
 
+  if (password !== confirmPass){
+    setErrorMsg("Password did not match");
+    return;
+  }
+  
   createUserWithPass(email, password)
     .then(result => {
       const user =result.user;
-      console.log("Registered User:", user);
+      console.log(user);
+      setErrorMsg('Registration Successful');
+      setSuccessMsg('');
+      e.target.reset();
+
+      setTimeout(() => {
+        setSuccessMsg('');
+        navigate('/login');
+      }, 2000);
   })
     .catch(err => {
       console.error("Error", err);
+      setErrorMsg(err.message);
+      setSuccessMsg('');
     })
   }
       
@@ -84,10 +102,10 @@ const Register = () => {
             }
            </div>
 
-           <button type='submit'
-           className='w-full mb-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer'>
-              Sign Up
-           </button>
+           {errorMsg && <p className='text-center text-red-600'> {errorMsg} </p>}
+           {successMsg && <p className='text-center text-green-600'> {successMsg} </p>}
+
+           
            <div className='flex itmes-center justify-between'>
             <p>
               <input 
@@ -102,6 +120,11 @@ const Register = () => {
             Forgot Password?
            </p>
            </div>
+
+           <button type='submit'
+           className='w-full mb-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer'>
+              Sign Up
+           </button>
         </form>
 
         {/* Divider here */}
