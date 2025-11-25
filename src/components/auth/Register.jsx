@@ -13,9 +13,10 @@ import { GoogleAuthProvider, sendEmailVerification } from 'firebase/auth';
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
-  const {createUserWithPass, signInWithGoogle, updateUserProfile} = useContext(AuthContext);
+  const {createUserWithPass, signInWithGoogle, updateUserProfile, resetPassword} = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [emailInput, setEmailInput] = useState('');
   const navigate = useNavigate();
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const provider = new GoogleAuthProvider();
@@ -32,6 +33,35 @@ const Register = () => {
     })
   } 
 
+  const handleForgotPass = () => {
+
+    if (!emailInput){
+      Swal.fire({
+        title: "Error",
+        text: "Please enter your email address to reset your password.",
+        icon: "info"
+      });
+      return;
+    }
+
+    resetPassword(emailInput)
+    .then(() => {
+      Swal.fire({
+        title: "Success",
+        text: "Password reset email sent successfully. Please check your inbox.",
+        icon: "success"
+      });
+    })
+    .catch(err => {
+      console.error("Error", err);
+      Swal.fire({
+        title: "Error",
+        text: err.message,
+        icon: "info"
+      });
+    });
+  }
+
 
   const handleRegisterForm = (e) => {
   e.preventDefault();
@@ -40,6 +70,9 @@ const Register = () => {
   const password = e.target.password.value;
   const confirmPass = e.target.confirmPass.value;
   const photoURL = e.target.photoURL.value;
+
+  setErrorMsg('');
+  setSuccessMsg('');
 
   if (password !== confirmPass){
     setErrorMsg("Password did not match");
@@ -55,30 +88,28 @@ const Register = () => {
       const user =result.user;
       console.log(user);
 
+      // Form Reset Here
+      e.target.reset();
+
       updateUserProfile(fullName, photoURL)
       .then(() => {
         sendEmailVerification(user)
       .then(() => {
         console.log("Verification Email Sent");
         Swal.fire({
-          title: "Verify your email!",
-          text: "A verification email has been sent to your email address.",
-          icon: "info"
+          title: "Registration Successful!",
+          text: "A verification email has been sent to your email address. Please verify your email before logging in.",
+          icon: "success"
         });
       });
       })
       .catch(err => {
-        console.error("Error", err);
-      })
-
-      setSuccessMsg('');
-      e.target.reset();
-
-    Swal.fire({
-      title: "Good job!",
-      text: "Registration Successful",
-      icon: "success"
-    });
+        Swal.fire({
+          title: "Registration Successful!",
+          text: "Your profile has been updated. However, we were unable to send a verification email at this time.",
+          icon: "info"
+        });
+      });
 
 
       setTimeout(() => {
@@ -124,6 +155,7 @@ const Register = () => {
               type="email" 
               name='email'
               placeholder='Email'
+              onChange={(e) => setEmailInput(e.target.value)}
               className='w-full border focus:outline-none px-4 py-2 rounded focus:ring-2 focus:ring-green-500'
               id='' 
               required
@@ -173,7 +205,7 @@ const Register = () => {
               />
                <label htmlFor="checkBox"> Accept Terms & <Link className='text-blue-700'> Conditions </Link> </label>
             </p>
-            <p className='text-sm text-right text-gray-600 hover:underline cursor-pointer'>
+            <p onClick={handleForgotPass} className='text-sm text-right text-gray-600 hover:underline cursor-pointer'>
             Forgot Password?
            </p>
            </div>
