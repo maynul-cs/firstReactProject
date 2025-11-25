@@ -89,7 +89,7 @@ const Navbar = () => {
             <div>
                 {
                     user ? <div className='flex items-center gap-2'> 
-                        <span> {user?.email}</span> <button onClick={handleSignOutUser} className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Sign Out </button> 
+                        <span> {user?.displayName}</span> <button onClick={handleSignOutUser} className='hidden md:block bg-white text-black px-4 py-1 rounded cursor-pointer hover:bg-slate-400'> Sign Out </button> 
                         </div> 
                         : 
                         <div>

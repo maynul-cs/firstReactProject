@@ -6,14 +6,14 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { AuthContext } from '../../providers/AuthProvider';
 import Swal from 'sweetalert2';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, sendEmailVerification } from 'firebase/auth';
 
 
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
-  const {createUserWithPass, signInWithGoogle} = useContext(AuthContext);
+  const {createUserWithPass, signInWithGoogle, updateUserProfile} = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const Register = () => {
   const email = e.target.email.value;
   const password = e.target.password.value;
   const confirmPass = e.target.confirmPass.value;
+  const photoURL = e.target.photoURL.value;
 
   if (password !== confirmPass){
     setErrorMsg("Password did not match");
@@ -53,6 +54,23 @@ const Register = () => {
     .then(result => {
       const user =result.user;
       console.log(user);
+
+      updateUserProfile(fullName, photoURL)
+      .then(() => {
+        sendEmailVerification(user)
+      .then(() => {
+        console.log("Verification Email Sent");
+        Swal.fire({
+          title: "Verify your email!",
+          text: "A verification email has been sent to your email address.",
+          icon: "info"
+        });
+      });
+      })
+      .catch(err => {
+        console.error("Error", err);
+      })
+
       setSuccessMsg('');
       e.target.reset();
 
@@ -90,6 +108,17 @@ const Register = () => {
               id='' 
               required
            />
+
+           <input 
+              type="text" 
+              name='photoURL'
+              placeholder='Photo URL'
+              className='w-full border focus:outline-none px-4 py-2 rounded focus:ring-2 focus:ring-green-500'
+              id='' 
+              required
+           />
+
+
 {/* Email */}
            <input 
               type="email" 
