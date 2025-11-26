@@ -13,7 +13,7 @@ import { GoogleAuthProvider, sendEmailVerification } from 'firebase/auth';
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState(false);
-  const {createUserWithPass, signInWithGoogle, updateUserProfile, resetPassword} = useContext(AuthContext);
+  const {createUserWithPass, signInWithGoogle, updateUserProfile, resetPassword, operationLoading, setOperationLoading} = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -70,6 +70,7 @@ const Register = () => {
   const password = e.target.password.value;
   const confirmPass = e.target.confirmPass.value;
   const photoURL = e.target.photoURL.value;
+  setOperationLoading(true);
 
   setErrorMsg('');
   setSuccessMsg('');
@@ -101,6 +102,12 @@ const Register = () => {
           text: "A verification email has been sent to your email address. Please verify your email before logging in.",
           icon: "success"
         });
+      })
+      .catch((err) => {
+
+      })
+      .finally(() => {
+        setOperationLoading(false);
       });
       })
       .catch(err => {
@@ -109,6 +116,9 @@ const Register = () => {
           text: "Your profile has been updated. However, we were unable to send a verification email at this time.",
           icon: "info"
         });
+      })
+      .finally(() => {
+        setOperationLoading(false);
       });
 
 
@@ -122,6 +132,9 @@ const Register = () => {
       setErrorMsg(err.message);
       setSuccessMsg('');
     })
+    .finally(() => {
+      setOperationLoading(false);
+    });
   }
       
 
@@ -210,9 +223,11 @@ const Register = () => {
            </p>
            </div>
 
-           <button type='submit'
+           <button 
+           disabled={operationLoading}
+           type='submit'
            className='w-full mb-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer'>
-              Sign Up
+              { operationLoading ? 'Registering...' : 'Register Now' }
            </button>
         </form>
 
