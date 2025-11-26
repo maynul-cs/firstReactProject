@@ -5,6 +5,8 @@ import { auth } from '../firebase/firebase.config';
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({children}) => {
+  const [loading, setLoading] = useState(true);
+  const [operationLoading, setOperationLoading] = useState(false);
   const [user, setUser] = useState(null);
   
   // Create User
@@ -45,6 +47,8 @@ const AuthProvider = ({children}) => {
         console.log("User is Sign Out");
         setUser(null);
       } 
+
+      setLoading(false);
     })
     return () => unsubscribe();
     }, []);
@@ -61,13 +65,22 @@ const AuthProvider = ({children}) => {
         signInWithEmailPass,
         signInWithGoogle,
         updateUserProfile,
-        resetPassword
+        resetPassword,
+        operationLoading
     }
 
 
   return (
     <AuthContext.Provider value={authInformation}>
-        {children}
+        {
+          loading ? (
+            <div className='flex justify-center itmes-center p-10'>
+              <span> Loading... </span>
+            </div>
+          ) : (
+            children
+          )
+        }
     </AuthContext.Provider>
   )
 }
